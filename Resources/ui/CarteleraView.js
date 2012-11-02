@@ -1,10 +1,10 @@
 // 
-// EstrenoView class
+// CarteleraView class
 //
 
 var self = this;
 
-function EstrenoView(_args) {
+function CarteleraView(_args) {
 	// get the _args		
 	self._args = _args;
 }	
@@ -13,7 +13,7 @@ function EstrenoView(_args) {
 	
 // public interface
 	
-EstrenoView.prototype.buildView = function () { 
+CarteleraView.prototype.buildView = function () { 
 
 	var movies = self._args.movies;
 	// create a var to track the active row
@@ -27,7 +27,7 @@ EstrenoView.prototype.buildView = function () {
 	});;
 		
 	
-	//movies.ui.activityIndicator.message = 'Cargando estrenos ...';
+	//movies.ui.activityIndicator.message = 'Cargando Carteleras ...';
 	
 	//if (movies.osname != 'android')
 	//	_win.add(movies.ui.activityIndicator);
@@ -36,10 +36,10 @@ EstrenoView.prototype.buildView = function () {
 	// instance
 	var peli = new Pelicula();
 
-	// get estrenos		
+	// get Carteleras		
 	var row = null;		
 
-	var estrenos = peli.getEstrenos({
+	var Carteleras = peli.getCartelera({
 		host: movies.WSHOST, 
 		success: buildRows 	
 	});
@@ -78,8 +78,8 @@ EstrenoView.prototype.buildView = function () {
 	
 }; // end function
 
-EstrenoView.prototype.reload = function() {
-		var estrenos = peli.getEstrenos({
+CarteleraView.prototype.reload = function() {
+		var Carteleras = peli.getCarteleras({
 			host: self._args.movies.WSHOST, 
 			success: buildRows 
 		});		
@@ -98,7 +98,7 @@ function buildRows(mvs) {
 	
 		var movie = mvs[c];
 		var pelicula_id = movie.pelicula_id;
-		var brief = movie.brief;
+		var brief = movie.descripcion;
 		var imagen = movie.imagen;
 		var titulo = movie.titulo;
 			// create row				
@@ -179,4 +179,4 @@ function buildRows(mvs) {
 } // end function
 
 
-module.exports = EstrenoView;
+module.exports = CarteleraView;

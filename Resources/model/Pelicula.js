@@ -40,7 +40,8 @@ var getPeliculas = function(args) {
 			var brief = movie.brief;
 			var imagen = movie.imagen;
 			var titulo = movie.titulo;
-			data.push({pelicula_id: pelicula_id, brief: brief, imagen: imagen, titulo: movie.titulo});						
+			var descripcion = movie.descripcion;
+			data.push({pelicula_id: pelicula_id, brief: brief, imagen: imagen, titulo: movie.titulo, descripcion: descripcion});						
 
 		}
 		

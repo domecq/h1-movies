@@ -75,34 +75,34 @@
 	movies.ui.createApplicationWindow = function () {
 		
 		// commonJS modules
-		var AppTabGroup = require('ui/AppTabGroup').AppTabGroup, 
-			AppWindow = require('ui/AppWindow').AppWindow, // application window
-			NavigationController = require('lib/NavigationController').NavigationController; // stack of windows
+		var AppTabGroup = require('ui/AppTabGroup').AppTabGroup;						
 			
-		// navigation controller, it is basically a stack of windows
-		controllerEstrenos =  new NavigationController();
-
-		// Estrenos's window
-		var winEstrenos = new AppWindow({movies: movies, kind: 'estrenos', win:{ title:'Estrenos', backgroundColor:'#fff', controller: controllerEstrenos} });		
-		
-		we = controllerEstrenos.push(winEstrenos);
-		//create our global tab group	
+		// Global tab group
+		movies.ui.tabs = {};
+		movies.ui.appViews = [];	
 		movies.ui.tabs = new AppTabGroup(
 			{
 			    icon:'images/estrenos.png',
 			   	title:'Estrenos',
 			   	height: 30, 
-			   	width: 30,   
-				window: we 
-			}/*,
+			   	width: 30,
+			   	window: Ti.UI.createWindow({ title:'Estrenos', backgroundColor:'#fff' }),
+			   	loaded: false,
+			   	kind: 'estrenos',
+			   	movies: movies    
+			},
 			{
-				title: 'Settings',
-				icon: 'images/KS_nav_views.png',
-				window: new AppWindow({title:'Settings',backgroundColor:'white'})
-			}*/
+			    icon:'images/cartelera.png',
+			   	title:'Cartelera',
+			   	height: 30, 
+			   	width: 30,
+			   	window: Ti.UI.createWindow({ title:'Cartelera', backgroundColor:'#fff' }),
+			   	loaded: false,
+			   	kind: 'cartelera',
+			   	movies: movies		   	 
+			}
+
 		);
-		
-		// estrenos
 		movies.ui.tabs.open();
 	}
 	
