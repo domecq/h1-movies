@@ -30,17 +30,7 @@ var movies = {
 	movies.ERROR_CONNECTION = 'Hay problemas en la conexión';
 	movies.WSHOST = 'http://h1movies.herokuapp.com';
 	
-
-	// metodos publicos de uso general
-	movies.roundNumber = function(rnum, rlength) { // Arguments: number to round, number of decimal places
-	  var newnumber = Math.round(rnum*Math.pow(10,rlength))/Math.pow(10,rlength);
-	  return parseFloat(newnumber); 
-	}
-	
-	movies.to_kilometer = function(num) {
-		return roundNumber(num * 1.609344,2);	
-	}
-	
+		
 	/*	
 		Branching logic based on OS
 	*/

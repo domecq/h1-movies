@@ -100,8 +100,18 @@
 			   	loaded: false,
 			   	kind: 'cartelera',
 			   	movies: movies		   	 
+			},
+			{
+			    icon:'images/cines.png',
+			   	title:'Cines',
+			   	height: 30, 
+			   	width: 30,
+			   	window: Ti.UI.createWindow({ title:'Cines', backgroundColor:'#fff' }),
+			   	loaded: false,
+			   	kind: 'cines',
+			   	movies: movies		   	 
 			}
-
+	
 		);
 		movies.ui.tabs.open();
 	}

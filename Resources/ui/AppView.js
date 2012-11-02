@@ -10,6 +10,10 @@ exports.AppView = function(args) {
 			CarteleraView = require('/ui/CarteleraView'); 
 			instance = new CarteleraView({win_params: args.win, movies: args.movies, win: args.win }); 			
 		break;
+		case 'cines':
+			CineView = require('/ui/CineView'); 
+			instance = new CineView({win_params: args.win, movies: args.movies, win: args.win }); 			
+		break;
 		
 	}
 	return instance;
