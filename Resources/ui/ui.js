@@ -79,7 +79,7 @@
 			
 		// Global tab group
 		movies.ui.tabs = {};
-		movies.ui.appViews = [];	
+		movies.ui.appViews = [];			
 		movies.ui.tabs = new AppTabGroup(
 			{
 			    icon:'images/estrenos.png',

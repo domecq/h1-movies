@@ -24,6 +24,7 @@ exports.AppTabGroup = function() {
 		if (!instance.currentTab.loaded) {
 			movies.ui.tabs.currentTab = instance.currentTab;
 			movies.ui.appViews[kind] = new AppView({movies: movies, kind: kind , win: instance.currentTab.window });
+			instance.currentTab.window.orientationModes=[Ti.UI.PORTRAIT];
 			instance.currentTab.window.add(movies.ui.appViews[kind].buildView());
 			instance.currentTab.loaded = true;
 		}
