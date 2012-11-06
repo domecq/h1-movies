@@ -166,25 +166,14 @@ var clickAnnotation = function(e) {
 	}         
 }
 
-var cinesClickHandlers = function(e) {
-
-	e.button1['tab'] = self.tab;
-	e.button2['mapview'] = self.mapview;
-	e.button2['loadData'] = self.loadData;
-			
-	
-};
-
 var onCreateCineMenu = function(e) {
 	var menu = e.menu;			
 	lstCines = menu.add({title : 'Listado'});
 	var path = Titanium.Filesystem.resourcesDirectory;
-	lstCines.setIcon('list.png');
+	//lstCines.setIcon('list.png');
 	refreshCines = menu.add({title : 'Actualizar', mapview: mapview});
-	refreshCines.setIcon('refresh.png');
-	//refreshCines['mapview'] = self.mapview;	
+	//refreshCines.setIcon('refresh.png');	
 	refreshCines['loadData'] = self.loadData
-	//cinesClickHandlers({button1: lstCines, button2: refreshCines});
 	
 	lstCines.addEventListener('click', createCineListadoUI );
 
