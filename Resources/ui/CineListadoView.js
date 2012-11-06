@@ -142,7 +142,7 @@ function buildRows(mvs) {
 } // end function
 
 function createRow(imagen, pelicula_id, titulo) {
-		
+	var movies = self._args.movies;		
 	// creo la row
 	var path = Titanium.Filesystem.resourcesDirectory;
 	var row = Ti.UI.createTableViewRow({hasChild:true,movieId: pelicula_id, titulo: titulo });

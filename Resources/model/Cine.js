@@ -69,11 +69,44 @@ var findNear = function(args) {
 			
 }
 
+// public interface
+
+exports.Cine.prototype.getCine = function(args) {
+						
+	// Open the webservice
+	var client = Ti.Network.createHTTPClient();
+	client.setTimeout(30000);		
+	
+	client.onerror = function(e) {
+		Titanium.UI.createAlertDialog({title:'Problemas',message: 'Hay problemas con la conexión'}).show();	 
+	};	
+
+	client.onload = function() {
+				
+		var data = [];
+		//var json = JSON.parse(this.responseData);
+		var json = eval('('+this.responseText+')');
+
+		var cine = json[0];
+	
+		var nombre = cine.nombre;
+		var direccion = cine.direccion;
+		var localidad = cine.localidad;		
+		var peliculas = json[1].peliculas;
+		var imagen = 'cine.png';
+		data.push({ nombre: nombre, imagen: imagen, direccion: direccion, localidad: localidad, peliculas: peliculas});
+						
+		args.success(data);			
+	};
+	var url = args.host + '/cines/' + args.cine_id;
+
+	client.open('GET', url);		
+	client.send();			
+			
+}
+
 
 exports.Cine.prototype.getCines = function(args) {
 	findNear({latitude: args.latitude, longitude: args.longitude, host: args.host, success: args.success});
 }
  
-exports.Cine.prototype.getCine = function(args) {
-	getCines({movie_id: args.movie_id, host: args.host, success: args.success});
-}
