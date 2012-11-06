@@ -21,16 +21,15 @@ EstrenoView.prototype.buildView = function () {
 	var currentRowIndex = null;
 	
 	// create table view  
-	self.tableView = Titanium.UI.createTableView({
-				filterAttribute:'filter',
-				backgroundColor:'#ffffff',
-				borderColor:'#fff',
-				separatorColor: '#fff'
-	});;
-		
-	
-	//if (movies.osname != 'android')
-	//	_win.add(movies.ui.activityIndicator);
+	self.tableView = Titanium.UI.createTableView();	
+	if (movies.osname == 'android') {
+		self.tableView.backgroundColor = '#58595B';
+	}
+	else {
+		self.tableView.backgroundColor = '#ffffff';
+		self.tableView.borderColor = '#fff';
+		self.tableView.separatorColor = '#fff';		
+	}
 	
 	movies.ui.indicator.openIndicator();
 		

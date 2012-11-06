@@ -10,6 +10,7 @@ function createIndicatorWindow(args) {
     var args = args || {};
     var top = args.top || 145;
     var text = args.text || 'Cargando ...';
+    var osname = Titanium.Platform.osname;
 
     var win = Titanium.UI.createWindow({
         height:           height,
@@ -21,12 +22,24 @@ function createIndicatorWindow(args) {
         opacity:          0.6
     });
 
-    var view = Ti.UI.createView({
-        width:   Ti.UI.SIZE,
-        height:  Ti.UI.FILL,
-        center:  { x: (width/2), y: (height/2) },
-        layout:  'horizontal'
-    });
+	if (osname != 'android') {    
+	
+	    var view = Ti.UI.createView({
+	        width:   Ti.UI.SIZE,
+	        height:  Ti.UI.FILL,
+	        center:  { x: (width/2), y: (height/2) },
+	        layout:  'horizontal'
+	    });
+	    
+	    var label = Titanium.UI.createLabel({
+	        left:    10,
+	        width:   Ti.UI.FILL,
+	        height:  Ti.UI.FILL,
+	        text:    text,
+	        color:   '#fff',
+	        font:    { fontFamily: 'Helvetica Neue', fontSize: 16, fontWeight: 'bold' }
+	    });
+	}    
 
     var activityIndicator = Ti.UI.createActivityIndicator({
         left:    0,
@@ -34,24 +47,19 @@ function createIndicatorWindow(args) {
         width:   30
     });
     
-	if (Titanium.Platform.osname != 'android')    
+	if (osname != 'android')    
 		activityIndicator.style = Ti.UI.iPhone.ActivityIndicatorStyle.PLAIN;
-		
-    var label = Titanium.UI.createLabel({
-        left:    10,
-        width:   Ti.UI.FILL,
-        height:  Ti.UI.FILL,
-        text:    text,
-        color:   '#fff',
-        font:    { fontFamily: 'Helvetica Neue', fontSize: 16, fontWeight: 'bold' }
-    });
-
-    view.add(activityIndicator);
-    view.add(label);
-    win.add(view);
+	else
+		activityIndicator.message = text;
+			
+	if (osname != 'android') {
+	    view.add(activityIndicator);
+	    view.add(label);
+	    win.add(view);
+	}
 
     function openIndicator() {
-        win.open();
+        if (osname != 'android') win.open();
         activityIndicator.show();
     }
 
