@@ -1,10 +1,10 @@
 // 
-// EstrenoView class
+// CineListadoView class
 //
 
 var self = this;
 
-function EstrenoView(_args) {
+function CineListadoView(_args) {
 	// get the _args		
 	self._args = _args;
 }	
@@ -13,7 +13,7 @@ function EstrenoView(_args) {
 	
 // public interface
 	
-EstrenoView.prototype.buildView = function () { 
+CineListadoView.prototype.buildView = function () { 
 
 	var movies = self._args.movies;
 	// create a var to track the active row
@@ -27,32 +27,32 @@ EstrenoView.prototype.buildView = function () {
 	});;
 		
 	
-	//movies.ui.activityIndicator.message = 'Cargando estrenos ...';
+	//movies.ui.activityIndicator.message = 'Cargando cines ...';
 	
 	//if (movies.osname != 'android')
 	//	_win.add(movies.ui.activityIndicator);
 		
-	var Pelicula = require('model/Pelicula').Pelicula;	
+	var Cine = require('model/Cine').Cine;	
 	// instance
-	var peli = new Pelicula();
+	var cine = new Cine();
 
-	// get estrenos		
+	// get cines		
 	var row = null;		
 
-	var estrenos = peli.getEstrenos({
+	var cines = cine.getCines({
 		host: movies.WSHOST, 
-		success: buildRows 	
-	});
+		success: buildRows,
+		latitude: movies.latitude,
+		longitude: movies.longitude 	
+	});	
 	
 
 	// listener
 	self.tableView.addEventListener('click', function(e) {
 		if (e.rowData.movieId) {
-			// creo la ventana
-			var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.rowData.titulo})
 			// Pelicula view
 			var PeliculaDetailView = require('/ui/PeliculaDetailView');
-			winDescripcion = new PeliculaDetailView({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies}); 
+			var winDescripcion = new PeliculaDetailView({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies});
 
 			if (movies.osname=="android" ) {
 				movies.ui.tabs.currentTab.add(winDescripcion);
@@ -76,31 +76,24 @@ EstrenoView.prototype.buildView = function () {
 	
 }; // end function
 
-EstrenoView.prototype.reload = function() {
-		var estrenos = peli.getEstrenos({
-			host: self._args.movies.WSHOST, 
-			success: buildRows 
-		});		
-};
 
 // private
 
 function buildRows(mvs) {
 	
-	var movies = self._args.movies;	 
-	
-		
+	var movies = self._args.movies;	 		
 	var data = [];
-
+	movies.rh = 80;
 	for (var c=0; c<mvs.length; c++) {
 	
 		var movie = mvs[c];
-		var pelicula_id = movie.pelicula_id;
-		var brief = movie.brief;
-		var imagen = movie.imagen;
-		var titulo = movie.titulo;
-			// create row				
-		row = movies.ui.createRow(imagen, pelicula_id, titulo);
+		var cine_id = movie.cine_id;
+		var brief = '';
+		var imagen = 'images/' + movie.imagen;
+		var titulo = movie.nombre;
+
+		// create row				
+		row = movies.ui.createRow(imagen, cine_id, titulo);
 	
 		var viewText = Titanium.UI.createView({
 			top:75,
@@ -128,7 +121,7 @@ function buildRows(mvs) {
 		var w = movies.ancho - 17;
 		var fsName = fs;
 											
-		// creo el titulo de la pelicula
+		// creo el titulo del cine
 		var max = (30/(fsName/2))*(w/(fsName/2));
 		
 		if (movies.osname=='android') {									
@@ -172,9 +165,9 @@ function buildRows(mvs) {
 		data.push(row);	
 	
 	} // end for		
-
+	movies.rh = 140;
 	self.tableView.data = data;
 } // end function
 
 
-module.exports = EstrenoView;
+module.exports = CineListadoView;

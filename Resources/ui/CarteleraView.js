@@ -49,9 +49,7 @@ CarteleraView.prototype.buildView = function () {
 	self.tableView.addEventListener('click', function(e) {
 		if (e.rowData.movieId) {
 			// creo la windows de la descripcion
-
 			var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.rowData.titulo})
-
 			// Pelicula view
 			var PeliculaDetailView = require('/ui/PeliculaDetailView');
 			winDescripcion = new PeliculaDetailView({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies});

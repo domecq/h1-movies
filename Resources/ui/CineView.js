@@ -38,8 +38,8 @@ CineView.prototype.buildView = function () {
 	self.mapIsAdded = false;
 	
 	// defino la region del mapa
-	latitude = -34.569281;
-	longitude = -58.468939;
+	latitude = movies.latitude;
+	longitude = movies.longitude;
 	if (latitude == null || longitude == null ) {
 		latitude = -34.569281;
 		longitude = -58.468939;
@@ -113,7 +113,7 @@ var buildRows = function(cns) {
 				mapParams.pincolor = Titanium.Map.ANNOTATION_PURPLE;
 				mapParams.rightButton = Titanium.UI.iPhone.SystemButton.DISCLOSURE;
 			} else {				
-				mapParams.pinImage = "pin.png";
+				mapParams.image = "../images/pin.png";
 			}
 			
 			var annotation = Titanium.Map.createAnnotation(mapParams);						
@@ -177,38 +177,49 @@ var cinesClickHandlers = function(e) {
 };
 
 var onCreateCineMenu = function(e) {
-			var menu = e.menu;			
-			lstCines = menu.add({title : 'Listado'});
-			var path = Titanium.Filesystem.resourcesDirectory;
-			lstCines.setIcon('list.png');
-			refreshCines = menu.add({title : 'Actualizar', mapview: mapview});
-			refreshCines.setIcon('refresh.png');
-			//refreshCines['mapview'] = self.mapview;
-			Ti.API.info(self.mapview);	
-			refreshCines['loadData'] = self.loadData
-			//cinesClickHandlers({button1: lstCines, button2: refreshCines});
-			
-			lstCines.addEventListener('click', function() {
-				var win = Titanium.UI.createWindow({
-					title:'Listado de cines',	
-					url:"cine_listado.js",			
-					backgroundColor:'#fff'
-				});
-				
-				tab.open(win,{animated:true});
-				
-		        // para disparar el evento tiene que estar creada la ventana
-				Ti.App.fireEvent('passCinesValues', { lat: latitude, lon: longitude});
-						
-			});
+	var menu = e.menu;			
+	lstCines = menu.add({title : 'Listado'});
+	var path = Titanium.Filesystem.resourcesDirectory;
+	lstCines.setIcon('list.png');
+	refreshCines = menu.add({title : 'Actualizar', mapview: mapview});
+	refreshCines.setIcon('refresh.png');
+	//refreshCines['mapview'] = self.mapview;
+	Ti.API.info(self.mapview);	
+	refreshCines['loadData'] = self.loadData
+	//cinesClickHandlers({button1: lstCines, button2: refreshCines});
 	
-			refreshCines.addEventListener('click', function(e) {
-				e.source.mapview.removeAllAnnotations();
-				e.source.mapview.removeEventListener('click', clickAnnotation);	
-				e.source.loadData();
-			});
+	lstCines.addEventListener('click', createCineListadoUI );
+
+	refreshCines.addEventListener('click', function(e) {
+		self.mapview.removeAllAnnotations();
+		self.mapview.removeEventListener('click', clickAnnotation);	
+		e.source.loadData();
+	});
 			
 };
+
+var createCineListadoUI = function () {
+	var movies = self._args.movies;
+	// Cine list view
+	var CineListadoView = require('/ui/CineListadoView');
+	var winDescripcion = Ti.UI.createWindow();
+	var listadoView = new CineListadoView({titulo: 'Cines', win: winDescripcion, movies: movies});
+	winDescripcion.add(listadoView.buildView());
+
+	if (movies.osname=="android" ) {
+		movies.ui.tabs.currentTab.add(winDescripcion);
+		winDescripcion.open({animated: true});
+		self._args.win.addEventListener('android:back',function(e){
+			winDescripcion.close();
+			return false;
+		});					
+		
+	}	
+				
+	if (movies.osname=="iphone" || movies.osname == "ipad" ) {
+		movies.ui.tabs.currentTab.open(winDescripcion,{animated:true});
+	}				
+}
 
 function createCineMenuUI(tab, win) {
 	if (self.movies.osname == 'iphone' || self.movies.osname=='ipad') {
@@ -220,18 +231,7 @@ function createCineMenuUI(tab, win) {
 		
 		self.win.setRightNavButton(listadoButton);
 		
-		listadoButton.addEventListener('click', function(e) {
-	
-			var win = Titanium.UI.createWindow({
-				url:"cine_listado.js",			
-				backgroundColor:'#fff'
-			});			
-			
-	        // para disparar el evento tiene que estar creada la ventana
-			Ti.App.longitudeCine = longitude;
-			Ti.App.latitudeCine = latitude;
-			tab.open(win,{animated:true});			
-		});
+		listadoButton.addEventListener('click', createCineListadoUI );
 					
 	} 	
 	if (self.movies.osname=='android') {		

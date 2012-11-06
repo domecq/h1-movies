@@ -16,8 +16,8 @@ var movies = {
 	
 	// propiedades 
 	movies.osname = Titanium.Platform.osname;
-	movies.longitude = null;
-	movies.latitude = null
+	movies.latitude = -34.569281;
+	movies.longitude = -58.468939;
 	movies.altitude = null;
 	movies.heading = null;
 	movies.accuracy = null;

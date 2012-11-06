@@ -13,7 +13,7 @@ exports.AppView = function(args) {
 		case 'cines':
 			CineView = require('/ui/CineView'); 
 			instance = new CineView({win_params: args.win, movies: args.movies, win: args.win }); 			
-		break;
+		break;		
 		
 	}
 	return instance;
