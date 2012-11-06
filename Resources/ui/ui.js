@@ -30,7 +30,10 @@
 		row.height = movies.rh;
 		row.className = 'datarow';
 		row.clickName = 'row';
-		row.rightImage = '../images/right_arrow.png';
+		if (movies.osname == 'android')
+			row.rightImage = '../images/right_arrow.png';
+		else 
+			row.rightImage = 'images/right_arrow.png';		
 		
 		var photoScale = Titanium.UI.createImageView({ 
 			image: imagen,
@@ -75,11 +78,13 @@
 	movies.ui.createApplicationWindow = function () {
 		
 		// commonJS modules
-		var AppTabGroup = require('ui/AppTabGroup').AppTabGroup;						
-			
+		var AppTabGroup = require('ui/AppTabGroup').AppTabGroup,
+			uie = require('lib/UiElements');
+						
 		// Global tab group
 		movies.ui.tabs = {};
-		movies.ui.appViews = [];			
+		movies.ui.appViews = [];
+		movies.ui.indicator = uie.createIndicatorWindow();			
 		movies.ui.tabs = new AppTabGroup(
 			{
 			    icon:'images/estrenos.png',
