@@ -23,14 +23,14 @@ CarteleraView.prototype.buildView = function () {
 	// create table view  
 	self.tableView = Titanium.UI.createTableView({
 				filterAttribute:'filter',
-				backgroundColor:'#58595B'
+				backgroundColor:'#ffffff',
+				borderColor:'#fff',
+				separatorColor: '#fff'
 	});;
-		
-	
-	//movies.ui.activityIndicator.message = 'Cargando Carteleras ...';
-	
+			
 	//if (movies.osname != 'android')
 	//	_win.add(movies.ui.activityIndicator);
+	movies.ui.indicator.openIndicator();	
 		
 	var Pelicula = require('model/Pelicula').Pelicula;	
 	// instance
@@ -174,6 +174,7 @@ function buildRows(mvs) {
 	} // end for		
 
 	self.tableView.data = data;
+	movies.ui.indicator.closeIndicator();
 } // end function
 
 

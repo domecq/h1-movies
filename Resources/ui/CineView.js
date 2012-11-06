@@ -142,8 +142,7 @@ var clickAnnotation = function(e) {
 	if (!e) return;
 	if (e.annotation && (e.clicksource === 'title' || e.clicksource == 'rightButton' || e.clicksource == 'subtitle') ) {
 		
-		// creo la windows de la descripcion
-	
+		// creo la windows de la descripcion	
 		var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.rowData.titulo})
 	
 		// Pelicula view
@@ -151,7 +150,7 @@ var clickAnnotation = function(e) {
 		winDescripcion = new PeliculaDetailView({titulo: e.rowData.titulo, movieId: e.rowData.cineId, win: winDescripcion, movies: movies});
 	
 		if (movies.osname=="android" ) {
-			movies.ui.tabs.currentTab.add(winDescripcion);
+			self.tab.add(winDescripcion);
 			winDescripcion.open({animated: true});
 			self._args.win.addEventListener('android:back',function(e){
 				winDescripcion.close();
@@ -161,7 +160,7 @@ var clickAnnotation = function(e) {
 		}	
 					
 		if (movies.osname=="iphone" || movies.osname == "ipad" ) {
-			movies.ui.tabs.currentTab.open(winDescripcion,{animated:true});
+			self.tab.open(winDescripcion,{animated:true});
 		}				
 					
 	}         
@@ -183,8 +182,7 @@ var onCreateCineMenu = function(e) {
 	lstCines.setIcon('list.png');
 	refreshCines = menu.add({title : 'Actualizar', mapview: mapview});
 	refreshCines.setIcon('refresh.png');
-	//refreshCines['mapview'] = self.mapview;
-	Ti.API.info(self.mapview);	
+	//refreshCines['mapview'] = self.mapview;	
 	refreshCines['loadData'] = self.loadData
 	//cinesClickHandlers({button1: lstCines, button2: refreshCines});
 	
@@ -207,7 +205,7 @@ var createCineListadoUI = function () {
 	winDescripcion.add(listadoView.buildView());
 
 	if (movies.osname=="android" ) {
-		movies.ui.tabs.currentTab.add(winDescripcion);
+		self.tab.add(winDescripcion);
 		winDescripcion.open({animated: true});
 		self._args.win.addEventListener('android:back',function(e){
 			winDescripcion.close();
@@ -217,7 +215,7 @@ var createCineListadoUI = function () {
 	}	
 				
 	if (movies.osname=="iphone" || movies.osname == "ipad" ) {
-		movies.ui.tabs.currentTab.open(winDescripcion,{animated:true});
+		self.tab.open(winDescripcion,{animated:true});
 	}				
 }
 

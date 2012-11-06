@@ -22,15 +22,12 @@ CineListadoView.prototype.buildView = function () {
 	
 	// create table view  
 	self.tableView = Titanium.UI.createTableView({
-				filterAttribute:'filter',
-				backgroundColor:'#58595B'
+				backgroundColor:'#ffffff',
+				borderColor:'#fff',
+				separatorColor: '#fff'
 	});;
 		
-	
-	//movies.ui.activityIndicator.message = 'Cargando cines ...';
-	
-	//if (movies.osname != 'android')
-	//	_win.add(movies.ui.activityIndicator);
+	movies.ui.indicator.openIndicator();
 		
 	var Cine = require('model/Cine').Cine;	
 	// instance
@@ -50,9 +47,13 @@ CineListadoView.prototype.buildView = function () {
 	// listener
 	self.tableView.addEventListener('click', function(e) {
 		if (e.rowData.movieId) {
+			
+			// creo la windows de la descripcion	
+			var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.rowData.titulo})
+						
 			// Pelicula view
-			var PeliculaDetailView = require('/ui/PeliculaDetailView');
-			var winDescripcion = new PeliculaDetailView({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies});
+			var CineDetailView = require('/ui/CineDetailView');
+			winDescripcion = new CineDetailView({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies});
 
 			if (movies.osname=="android" ) {
 				movies.ui.tabs.currentTab.add(winDescripcion);
@@ -83,7 +84,6 @@ function buildRows(mvs) {
 	
 	var movies = self._args.movies;	 		
 	var data = [];
-	movies.rh = 80;
 	for (var c=0; c<mvs.length; c++) {
 	
 		var movie = mvs[c];
@@ -93,17 +93,8 @@ function buildRows(mvs) {
 		var titulo = movie.nombre;
 
 		// create row				
-		row = movies.ui.createRow(imagen, cine_id, titulo);
-	
-		var viewText = Titanium.UI.createView({
-			top:75,
-			width: movies.ancho,
-			height: 65,
-			backgroundColor: '#ffffff'			
-		});
+		row = createRow(imagen, cine_id, titulo);
 		
-		row.add(viewText);
-	
 		var fs = 14;
 		var fsw = 7.5;
 		
@@ -142,32 +133,41 @@ function buildRows(mvs) {
 		row.filter = movieName.text;
 		row.add(movieName);
 		
-		// creo la descripcion
-		var max = Math.floor((60/(fs-3))*(w/(fs-3)));
-		
-		if (movies.osname=='android') {
-			if (brief!=undefined && brief.length>=max)
-				brief = brief.substring(0,max) + '...';
-		}
-		
-		var description = Ti.UI.createLabel({
-			color:'black',
-			font:{fontSize:fs,fontWeight:'normal', fontFamily:'Arial'},
-			left:2,
-			top: 77,
-			height:60,
-			width: w,
-			clickName:'description',
-			text: brief
-		});
-		row.add(description);
 	
 		data.push(row);	
 	
 	} // end for		
-	movies.rh = 140;
 	self.tableView.data = data;
+	movies.ui.indicator.closeIndicator();	
 } // end function
+
+function createRow(imagen, pelicula_id, titulo) {
+		
+	// creo la row
+	var path = Titanium.Filesystem.resourcesDirectory;
+	var row = Ti.UI.createTableViewRow({hasChild:true,movieId: pelicula_id, titulo: titulo });
+	row.backgroundSelectedColor = '#fff';
+	row.height = 77;
+	row.className = 'datarow';
+	row.clickName = 'row';
+	if (movies.osname == 'android')
+		row.rightImage = '../images/right_arrow.png';
+	else 
+		row.rightImage = 'images/right_arrow.png';
+	var maskView = Titanium.UI.createView({				
+		top:0,
+		width: movies.ancho,
+		height: 75,
+		backgroundColor: '#000000',
+		opacity: 0.45
+	});
+	
+	row.add(maskView);
+					
+
+	return row;
+	
+}
 
 
 module.exports = CineListadoView;
