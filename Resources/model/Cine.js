@@ -62,8 +62,12 @@ var findNear = function(args) {
 		
 		args.success(data);			
 	};
-	var url = args.host + '/cines/findnear/' + args.latitude + '/' + args.longitude;
-			
+	var url;
+	if (typeof args.pelicula_id == 'undefined') 
+		url = args.host + '/cines/findnear/' + args.latitude + '/' + args.longitude;
+	else
+		url = args.host + '/cines/findwhere/' + args.latitude + '/' + args.longitude  + '/' + args.pelicula_id;			
+
 	client.open('GET', url);		
 	client.send();			
 			
@@ -106,7 +110,7 @@ exports.Cine.prototype.getCine = function(args) {
 }
 
 
-exports.Cine.prototype.getCines = function(args) {
-	findNear({latitude: args.latitude, longitude: args.longitude, host: args.host, success: args.success});
+exports.Cine.prototype.getCines = function(_args) {
+	findNear(_args);
 }
  

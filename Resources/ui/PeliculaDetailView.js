@@ -7,7 +7,9 @@ function PeliculaDetailView(_args) {
 	// creo la vista para el detalle
 	var titulo = _args.titulo,
 		movieId = _args.movieId,
-		movies = _args.movies;
+		movies = _args.movies,
+		tab = _args.movies.ui.tabs.currentTab;
+		
 	
 	
 	var Pelicula = require('model/Pelicula').Pelicula;
@@ -22,15 +24,14 @@ function PeliculaDetailView(_args) {
 	var _win = _args.win;
 	
 
-	//activityIndicator.message = 'Cargando ' + Titanium.UI.currentWindow.titulo ;
-	//win.add(activityIndicator);
+	movies.ui.indicator.openIndicator();
 	
 	peli.getPelicula({
 		movie_id: movieId,
 		host: movies.WSHOST,		 
 		success: function (mvs) {	 			
 			var movie = mvs[0];
-			var pelicula_id = movie.id;
+			var pelicula_id = movie.pelicula_id;
 			var descripcion = movie.descripcion;			
 			var imagen = movie.imagen;
 			var titulo = movie.titulo;
@@ -69,7 +70,6 @@ function PeliculaDetailView(_args) {
 			});
 
 			// creo la row para el titulo
-			//var row = Ti.UI.createTableViewRow({hasChild:true,movieId: cine_id, titulo: nombre });
 			var row = Ti.UI.createTableViewRow({hasChild:false});
 			row.backgroundSelectedColor = '#fff';
 			row.borderColor = '#fff';		
@@ -141,7 +141,7 @@ function PeliculaDetailView(_args) {
 			var horario = Ti.UI.createLabel({
 				color:'#222',
 				font:{fontSize:fs + 3,fontWeight:'normal', fontFamily:'Arial'},
-				left:46,
+				left:10,
 				top: 1,
 				height: 50,
 				width: 'auto',
@@ -150,6 +150,7 @@ function PeliculaDetailView(_args) {
 			});
 			
 			// creo el icono	
+			/*
 			var icono = Titanium.UI.createImageView({ 
 				image: 'images/horarios.png',
 				left: 12.5,
@@ -157,21 +158,22 @@ function PeliculaDetailView(_args) {
 				height:25,
 				width:26
 			})
+			*/
 			
-			var row = Ti.UI.createTableViewRow({hasChild:true});
+			var row = Ti.UI.createTableViewRow({hasChild:true, movieId: pelicula_id });
 			row.backgroundSelectedColor = '#fff';
 			row.borderColor = '#ccc';
 			row.height = 50;
 			row.className = 'datarow';
 			row.clickName = 'row';		
 			row.add(horario);
-			row.add(icono);
+			//row.add(icono);
 			data.push(row);				
 				
 			tableView.data = data;
 			_win.add(tableView);				
 			// oculto el indicador de estado		
-			//activityIndicator.hide();		
+			movies.ui.indicator.closeIndicator();
 
 				
 		}
@@ -179,12 +181,33 @@ function PeliculaDetailView(_args) {
 	});
 	
 	tableView.addEventListener('click', function(e) {
-		// Ti.API.info('table view row clicked - source ' + e.source);
-		// Aca tendria que mostrar los horarios
-
+ 		// 'cines/findwhere/:latitud/:longitud/:movie_id
 		if (e.rowData.movieId) {
-
+			
+			// Cine list view
+			var CineView = require('/ui/CineView');
+			var winDescripcion = Ti.UI.createWindow();
+			var listadoView = new CineView({titulo: 'Cines', win: winDescripcion, movies: movies});
+			winDescripcion.add(listadoView.buildView(e.rowData.movieId));
+		
+			if (movies.osname=="android" ) {
+				tab.add(winDescripcion);
+				winDescripcion.open({animated: true});
+				_args.win.addEventListener('android:back',function(e){
+					winDescripcion.close();
+					return false;
+				});					
+				
+			}	
+						
+			if (movies.osname=="iphone" || movies.osname == "ipad" ) {
+				tab.open(winDescripcion,{animated:true});
+			}				
+			
+			
 		}	
+		
+		
 	});
 			
 	return _win;

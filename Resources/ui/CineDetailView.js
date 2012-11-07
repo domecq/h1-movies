@@ -170,7 +170,7 @@ function CineDetailView(_args) {
 		// Aca tendria que mostrar el detalle de las peliculas
 
 		if (e.rowData.movieId) {
-
+			alert(e.rowData.movieId);
 		}	
 	});
 			

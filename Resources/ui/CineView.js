@@ -16,7 +16,7 @@ function CineView(_args) {
 	
 // public methods
 	
-CineView.prototype.buildView = function () { 
+CineView.prototype.buildView = function (pelicula_id) { 
 
 	var movies = self._args.movies;
 	// create a var to track the active row
@@ -56,17 +56,14 @@ CineView.prototype.buildView = function () {
 	// get cines		
 	var row = null;
 
-	//movies.ui.activityIndicator.message = 'Cargando Cines ...';
-	// en ios necesita estar attachado a una ventana
-	//if (movies.osname != 'android')
-	//	self.win.add(movies.ui.activityIndicator);
-	
-	var cines = cine.getCines({
+	var params = {
 		host: movies.WSHOST, 
 		success: buildRows,
 		latitude: latitude,
 		longitude: longitude 	
-	});	
+	};
+	if (typeof pelicula_id !== 'undefined') params.pelicula_id = pelicula_id; 
+	var cines = cine.getCines(params);	
 	
 	return self.mapview;
 	
@@ -113,7 +110,7 @@ var buildRows = function(cns) {
 				mapParams.pincolor = Titanium.Map.ANNOTATION_PURPLE;
 				mapParams.rightButton = Titanium.UI.iPhone.SystemButton.DISCLOSURE;
 			} else {				
-				mapParams.image = "../images/pin.png";
+				mapParams.image = "/images/pin.png";
 			}
 			
 			var annotation = Titanium.Map.createAnnotation(mapParams);						
@@ -143,14 +140,14 @@ var clickAnnotation = function(e) {
 	if (e.annotation && (e.clicksource === 'title' || e.clicksource == 'rightButton' || e.clicksource == 'subtitle') ) {
 		
 		// creo la windows de la descripcion	
-		var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.rowData.titulo})
-	
+		var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.title})
+					
 		// Pelicula view
 		var CineDetailView = require('/ui/CineDetailView');
-		winDescripcion = new PeliculaDetailView({titulo: e.rowData.titulo, movieId: e.rowData.cineId, win: winDescripcion, movies: movies});
-	
+		winDescripcion = new CineDetailView({titulo: e.title, movieId: e.cineId, win: winDescripcion, movies: movies});
+
 		if (movies.osname=="android" ) {
-			self.tab.add(winDescripcion);
+			movies.ui.tabs.currentTab.add(winDescripcion);
 			winDescripcion.open({animated: true});
 			self._args.win.addEventListener('android:back',function(e){
 				winDescripcion.close();
@@ -160,7 +157,7 @@ var clickAnnotation = function(e) {
 		}	
 					
 		if (movies.osname=="iphone" || movies.osname == "ipad" ) {
-			self.tab.open(winDescripcion,{animated:true});
+			movies.ui.tabs.currentTab.open(winDescripcion,{animated:true});
 		}				
 					
 	}         
