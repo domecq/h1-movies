@@ -10,6 +10,9 @@ function CineView(_args) {
 	// get the _args		
 	self._args = _args;	
 	self.movies = _args.movies;
+	var Geo = require('lib/Geo');
+	self.geo = new Geo();
+	Ti.API.log('here');
 }	
 
 
@@ -19,6 +22,8 @@ function CineView(_args) {
 CineView.prototype.buildView = function (pelicula_id) { 
 
 	var movies = self._args.movies;
+
+
 	// create a var to track the active row
 	var currentRow = null;
 	var currentRowIndex = null;
@@ -36,10 +41,33 @@ CineView.prototype.buildView = function (pelicula_id) {
 			});
 
 	self.mapIsAdded = false;
+
+	// geo
+	movies.ui.indicator.openIndicator();
+	self.geo.getPosition(drawArea);	
+	
+	return self.mapview;
+	
+}; // end function
+
+CineView.prototype.reload = function() {
+		var cines = cine.getCines({
+			host: self._args.movies.WSHOST, 
+			success: buildRows 
+		});		
+};
+
+
+////////////// private methods ////////////////
+
+var drawArea = function() {
+	
+	var movies = self._args.movies;
 	
 	// defino la region del mapa
-	latitude = movies.latitude;
-	longitude = movies.longitude;
+	latitude = self.geo.getLatitude();
+	longitude = self.geo.getLongitude();
+	Ti.API.info('location ' + latitude + ' ' + longitude );
 	if (latitude == null || longitude == null ) {
 		latitude = -34.569281;
 		longitude = -58.468939;
@@ -58,28 +86,16 @@ CineView.prototype.buildView = function (pelicula_id) {
 
 	var params = {
 		host: movies.WSHOST, 
-		success: buildRows,
+		success: drawPins,
 		latitude: latitude,
 		longitude: longitude 	
 	};
 	if (typeof pelicula_id !== 'undefined') params.pelicula_id = pelicula_id; 
 	var cines = cine.getCines(params);	
-	
-	return self.mapview;
-	
-}; // end function
 
-CineView.prototype.reload = function() {
-		var cines = cine.getCines({
-			host: self._args.movies.WSHOST, 
-			success: buildRows 
-		});		
-};
+}
 
-
-////////////// private methods ////////////////
-
-var buildRows = function(cns) {
+var drawPins = function(cns) {
 	// globals
 	var movies = self._args.movies;	 	
 	var data = [];
@@ -127,9 +143,8 @@ var buildRows = function(cns) {
 		
 		
 	//movies.ui.activityIndicator.hide();				
-	self.mapview.addEventListener('click', clickAnnotation);
-			
-
+	self.mapview.addEventListener('click', clickAnnotation);			
+	movies.ui.indicator.closeIndicator();
 } // end function
 
 

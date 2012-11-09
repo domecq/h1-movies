@@ -16,14 +16,6 @@ var movies = {
 	
 	// propiedades 
 	movies.osname = Titanium.Platform.osname;
-	movies.latitude = -34.569281;
-	movies.longitude = -58.468939;
-	movies.altitude = null;
-	movies.heading = null;
-	movies.accuracy = null;
-	movies.speed = null;
-	movies.timestamp = null;
-	movies.altitudeAccuracy = null;
 	movies.ancho = Ti.Platform.displayCaps.platformWidth;	
 	movies.alto = Ti.Platform.displayCaps.platformHeight;
 	movies.rh = 140; // rowHeight
@@ -36,9 +28,9 @@ var movies = {
 	*/
 	movies.os = function(/*Object*/ map) {
 		var def = map.def||null; //default function or value
-		if (typeof map[osname] != 'undefined') {
-			if (typeof map[osname] == 'function') { return map[osname](); }
-			else { return map[osname]; }
+		if (typeof map[movies.osname] != 'undefined') {
+			if (typeof map[movies.osname] == 'function') { return map[movies.osname](); }
+			else { return map[movies.osname]; }
 		}
 		else {
 			if (typeof def == 'function') { return def(); }
@@ -56,13 +48,5 @@ var movies = {
 	
 })();
 
-
-
-Ti.include(
-	'ui/ui.js'
-);
-
-// Note: if we have configuration, it will have to go in 
-/*
-	'/movies/config/config.js'
-*/
+// user interface
+Ti.include('ui/ui.js');
