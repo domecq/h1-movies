@@ -27,6 +27,7 @@ function CineDetailView(_args) {
 	peli.getCine({
 		cine_id: movieId,
 		host: movies.WSHOST,		 
+		movies: movies,
 		success: function (cns) {	 			
 			var cine = cns[0];
 			var nombre = cine.nombre;			
@@ -146,20 +147,24 @@ function CineDetailView(_args) {
 					top: 22
 				});
 				
-				var row = Ti.UI.createTableViewRow({hasChild:false});
+				var row = Ti.UI.createTableViewRow({hasChild:true, movieId: pelicula_id, titulo: titulo});
 				row.backgroundSelectedColor = '#fff';
 				row.borderColor = '#ccc';
 				row.height = 70;
 				row.add(movieTitulo);
 				row.add(movieHorarios);
+				if (movies.osname == 'android')
+					row.rightImage = '../images/right_arrow_black.png';
+				else 
+					row.rightImage = 'images/right_arrow_black.png';
+
 				data.push(row);				
 			}
 				
 			tableView.data = data;
-			_win.add(tableView);				
-			// oculto el indicador de estado		
-			movies.ui.indicator.closeIndicator();		
-
+			_win.add(tableView);
+			// oculto el indicador de estado
+			movies.ui.indicator.closeIndicator();
 				
 		}
 			
@@ -170,7 +175,26 @@ function CineDetailView(_args) {
 		// Aca tendria que mostrar el detalle de las peliculas
 
 		if (e.rowData.movieId) {
-			alert(e.rowData.movieId);
+			// creo la ventana
+			var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.rowData.titulo})
+			// Pelicula view
+			var PeliculaDetailView = require('/ui/PeliculaDetailView');
+			winDescripcion = new PeliculaDetailView({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies}); 
+
+			if (movies.osname=="android" ) {
+				movies.ui.tabs.currentTab.add(winDescripcion);
+				winDescripcion.open({animated: true});
+				self._args.win.addEventListener('android:back',function(e){
+					winDescripcion.close();
+					return false;
+				});					
+				
+			}	
+						
+			if (movies.osname=="iphone" || movies.osname == "ipad" ) {
+				movies.ui.tabs.currentTab.open(winDescripcion,{animated:true});
+			}				
+
 		}	
 	});
 			

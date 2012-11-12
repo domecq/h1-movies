@@ -35,7 +35,7 @@ CineListadoView.prototype.buildView = function () {
 		
 	var Cine = require('model/Cine').Cine;	
 	// instance
-	var cine = new Cine();
+	var cine = new Cine(movies);
 
 	// get cines		
 	var row = null;		
@@ -44,7 +44,8 @@ CineListadoView.prototype.buildView = function () {
 		host: movies.WSHOST, 
 		success: buildRows,
 		latitude: movies.latitude,
-		longitude: movies.longitude 	
+		longitude: movies.longitude,
+		movies: movies 	
 	});	
 	
 

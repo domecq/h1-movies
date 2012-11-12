@@ -156,10 +156,9 @@ var clickAnnotation = function(e) {
 		
 		// creo la windows de la descripcion	
 		var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.title})
-					
 		// Pelicula view
 		var CineDetailView = require('/ui/CineDetailView');
-		winDescripcion = new CineDetailView({titulo: e.title, movieId: e.cineId, win: winDescripcion, movies: movies});
+		winDescripcion = new CineDetailView({titulo: e.annotation.title, movieId: e.annotation.cineId, win: winDescripcion, movies: movies});
 
 		if (movies.osname=="android" ) {
 			movies.ui.tabs.currentTab.add(winDescripcion);

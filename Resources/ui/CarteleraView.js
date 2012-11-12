@@ -42,7 +42,8 @@ CarteleraView.prototype.buildView = function () {
 
 	var Carteleras = peli.getCartelera({
 		host: movies.WSHOST, 
-		success: buildRows 	
+		success: buildRows,
+		movies: movies	
 	});
 	
 

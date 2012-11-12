@@ -1,6 +1,6 @@
 // Class Cine
 
-exports.Cine = function() {
+exports.Cine = function(_args) {
 	
 	this.handleError = function(_e,_xhr,_custom) {
 		if (_custom) {
@@ -33,6 +33,7 @@ var findNear = function(args) {
 	
 	client.onerror = function(e) {
 		Titanium.UI.createAlertDialog({title:'Problemas',message: 'Hay problemas con la conexión'}).show();	 
+		args.movies.ui.indicator.closeIndicator();	
 	};	
 
 	client.onload = function() {
@@ -83,6 +84,7 @@ exports.Cine.prototype.getCine = function(args) {
 	
 	client.onerror = function(e) {
 		Titanium.UI.createAlertDialog({title:'Problemas',message: 'Hay problemas con la conexión'}).show();	 
+		args.movies.ui.indicator.closeIndicator();	
 	};	
 
 	client.onload = function() {

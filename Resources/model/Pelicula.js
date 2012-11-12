@@ -23,6 +23,7 @@ var getPeliculas = function(args) {
 	
 	client.onerror = function(e) {
 		Titanium.UI.createAlertDialog({title:'Problemas',message: 'Hay problemas con la conexión'}).show();	 
+		args.movies.ui.indicator.closeIndicator();	
 	};	
 
 	client.onload = function() {

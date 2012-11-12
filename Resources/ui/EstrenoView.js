@@ -42,7 +42,8 @@ EstrenoView.prototype.buildView = function () {
 
 	var estrenos = peli.getEstrenos({
 		host: movies.WSHOST, 
-		success: buildRows 	
+		success: buildRows,
+		movies: movies 	
 	});
 	
 
