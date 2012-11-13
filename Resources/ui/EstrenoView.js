@@ -7,6 +7,12 @@ var self = this;
 function EstrenoView(_args) {
 	// get the _args		
 	self._args = _args;
+
+	// model pelicula
+	var Pelicula = require('model/Pelicula').Pelicula;	
+	// instance
+	self.pelicula = new Pelicula();
+
 }	
 
 
@@ -19,6 +25,10 @@ EstrenoView.prototype.buildView = function () {
 	// create a var to track the active row
 	var currentRow = null;
 	var currentRowIndex = null;
+
+	// refresh button
+	var refreshButton = Ti.UI.createButton({ systemButton: Ti.UI.iPhone.SystemButton.REFRESH });
+	self._args.win.setRightNavButton(refreshButton);
 	
 	// create table view  
 	self.tableView = Titanium.UI.createTableView();	
@@ -33,14 +43,10 @@ EstrenoView.prototype.buildView = function () {
 	
 	movies.ui.indicator.openIndicator();
 		
-	var Pelicula = require('model/Pelicula').Pelicula;	
-	// instance
-	var peli = new Pelicula();
-
 	// get estrenos		
 	var row = null;		
 
-	var estrenos = peli.getEstrenos({
+	var estrenos = self.pelicula.getEstrenos({
 		host: movies.WSHOST, 
 		success: buildRows,
 		movies: movies 	
@@ -72,20 +78,29 @@ EstrenoView.prototype.buildView = function () {
 
 		}	
 	});	 // end listener
+
+	refreshButton.addEventListener('click', function(e) {
+		self.tableView.data = null;
+		movies.ui.indicator.openIndicator();
+		reload();
+	});
+
 	
 	
 	return self.tableView;
 	
 }; // end function
 
-EstrenoView.prototype.reload = function() {
-		var estrenos = peli.getEstrenos({
-			host: self._args.movies.WSHOST, 
-			success: buildRows 
-		});		
-};
-
 // private
+
+var reload = function() {
+	var movies = self._args.movies;	
+	var estrenos = self.pelicula.getEstrenos({
+		host: movies.WSHOST, 
+		success: buildRows,
+		movies: movies 	
+	});
+};
 
 function buildRows(mvs) {
 	

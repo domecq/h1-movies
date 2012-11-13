@@ -12,6 +12,10 @@ function CineView(_args) {
 	self.movies = _args.movies;
 	var Geo = require('lib/Geo');
 	self.geo = new Geo();
+	// Cine model			
+	var Cine = require('model/Cine').Cine;	
+	self.cine = new Cine();
+
 	Ti.API.log('here');
 }	
 
@@ -22,6 +26,7 @@ function CineView(_args) {
 CineView.prototype.buildView = function (pelicula_id) { 
 
 	var movies = self._args.movies;
+	self.pelicula_id = (typeof pelicula_id!=='undefined') ? pelicula_id : null;
 
 
 	// create a var to track the active row
@@ -50,15 +55,21 @@ CineView.prototype.buildView = function (pelicula_id) {
 	
 }; // end function
 
-CineView.prototype.reload = function() {
-		var cines = cine.getCines({
-			host: self._args.movies.WSHOST, 
-			success: buildRows 
-		});		
-};
-
 
 ////////////// private methods ////////////////
+
+var reload = function() {
+	var movies = self._args.movies;
+	var params = {
+		host: movies.WSHOST, 
+		success: drawPins,
+		latitude: latitude,
+		longitude: longitude 	
+	};
+	if (self.pelicula_id !== null) params.pelicula_id = self.pelicula_id; 
+	var cines = self.cine.getCines(params);	
+};
+
 
 var drawArea = function() {
 	
@@ -77,10 +88,8 @@ var drawArea = function() {
 	// creo el menú para android y el tab nav para ios	
 	createCineMenuUI(self.tab,self.win);
 			
-	// Cine model			
-	var Cine = require('model/Cine').Cine;	
 	// instance
-	var cine = new Cine();
+	var cine = self.cine;
 	// get cines		
 	var row = null;
 
@@ -90,7 +99,8 @@ var drawArea = function() {
 		latitude: latitude,
 		longitude: longitude 	
 	};
-	if (typeof pelicula_id !== 'undefined') params.pelicula_id = pelicula_id; 
+
+	if (self.pelicula_id !== null) params.pelicula_id = self.pelicula_id; 
 	var cines = cine.getCines(params);	
 
 }
@@ -184,14 +194,13 @@ var onCreateCineMenu = function(e) {
 	//lstCines.setIcon('list.png');
 	refreshCines = menu.add({title : 'Actualizar', mapview: mapview});
 	//refreshCines.setIcon('refresh.png');	
-	refreshCines['loadData'] = self.loadData
 	
 	lstCines.addEventListener('click', createCineListadoUI );
 
 	refreshCines.addEventListener('click', function(e) {
 		self.mapview.removeAllAnnotations();
 		self.mapview.removeEventListener('click', clickAnnotation);	
-		e.source.loadData();
+		reload();
 	});
 			
 };
@@ -226,10 +235,21 @@ function createCineMenuUI(tab, win) {
 			labels:['Listado'],
 			backgroundColor:'#336699'
 		});
-		
+		var refreshButton = Ti.UI.createButton({ systemButton: Ti.UI.iPhone.SystemButton.REFRESH });
+
 		self.win.setRightNavButton(listadoButton);
+		self.win.setLeftNavButton(refreshButton);
+		
 		
 		listadoButton.addEventListener('click', createCineListadoUI );
+	
+		refreshButton.addEventListener('click', function(e) {
+			movies.ui.indicator.openIndicator();
+			self.mapview.removeAllAnnotations();
+			self.mapview.removeEventListener('click', clickAnnotation);	
+			reload();
+		});
+
 					
 	} 	
 	if (self.movies.osname=='android') {		
