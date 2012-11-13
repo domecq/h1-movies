@@ -26,9 +26,13 @@ EstrenoView.prototype.buildView = function () {
 	var currentRow = null;
 	var currentRowIndex = null;
 
-	// refresh button
-	var refreshButton = Ti.UI.createButton({ systemButton: Ti.UI.iPhone.SystemButton.REFRESH });
-	self._args.win.setRightNavButton(refreshButton);
+	if (movies.osname!='android') {
+		// refresh button
+		var refreshButton = Ti.UI.createButton({ systemButton: Ti.UI.iPhone.SystemButton.REFRESH });
+		self._args.win.setRightNavButton(refreshButton);
+	} else {
+		self._args.win.activity.onCreateOptionsMenu = onCreateCineMenu;
+	}
 	
 	// create table view  
 	self.tableView = Titanium.UI.createTableView();	
@@ -79,12 +83,13 @@ EstrenoView.prototype.buildView = function () {
 		}	
 	});	 // end listener
 
-	refreshButton.addEventListener('click', function(e) {
-		self.tableView.data = null;
-		movies.ui.indicator.openIndicator();
-		reload();
-	});
-
+	if (movies.osname!='android') {
+		refreshButton.addEventListener('click', function(e) {
+			self.tableView.data = null;
+			movies.ui.indicator.openIndicator();
+			reload();
+		});
+	}
 	
 	
 	return self.tableView;
@@ -100,6 +105,18 @@ var reload = function() {
 		success: buildRows,
 		movies: movies 	
 	});
+};
+
+var onCreateCineMenu = function(e) {
+	var movies = self._args.movies;	
+	var menu = e.menu;			
+	refreshCines = menu.add({title : 'Actualizar', tableView: self.tableView});
+	refreshCines.addEventListener('click', function(e) {
+		self.tableView.data = null;
+		movies.ui.indicator.openIndicator();
+		reload();
+	});
+			
 };
 
 function buildRows(mvs) {
@@ -193,6 +210,5 @@ function buildRows(mvs) {
 	self.tableView.data = data;
 	movies.ui.indicator.closeIndicator();
 } // end function
-
 
 module.exports = EstrenoView;
