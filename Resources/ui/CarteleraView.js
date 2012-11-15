@@ -8,10 +8,12 @@ function CarteleraView(_args) {
 	// get the _args		
 	self._args = _args;
 
-	// model pelicula
+ç	// model pelicula
 	var Pelicula = require('model/Pelicula').Pelicula;	
-	// instance
 	self.pelicula = new Pelicula();
+	// detail view
+	self.winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
+	self.peliculaDetailView = require('/ui/PeliculaDetailView');
 
 }	
 
@@ -36,15 +38,7 @@ CarteleraView.prototype.buildView = function () {
 	}
 	
 	// create table view  
-	self.tableView = Titanium.UI.createTableView();
-	if (movies.osname == 'android') {
-		self.tableView.backgroundColor = '#58595B';
-	}
-	else {
-		self.tableView.backgroundColor = '#ffffff';
-		self.tableView.borderColor = '#fff';
-		self.tableView.separatorColor = '#fff';		
-	}
+	self.tableView = createTable();
 			
 	movies.ui.indicator.openIndicator();	
 		
@@ -61,12 +55,19 @@ CarteleraView.prototype.buildView = function () {
 	// listener
 	self.tableView.addEventListener('click', function(e) {
 		if (e.rowData.movieId) {
-			// creo la windows de la descripcion
-			var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.rowData.titulo})
-			// Pelicula view
-			var PeliculaDetailView = require('/ui/PeliculaDetailView');
-			winDescripcion = new PeliculaDetailView({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies});
+			
+			Ti.API.log('Memoria disponible ' + Ti.Platform.availableMemory);    
+			self.winDescripcion.close();
+			self.winDescripcion = null;
+			self.winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
 
+			// creo la windows de la descripcion
+			var winDescripcion = self.winDescripcion;
+			winDescripcion.title = e.rowData.titulo;
+
+			// Pelicula view
+			winDescripcion.add(self.peliculaDetailView.build({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies}));
+			
 			if (movies.osname=="android" ) {
 				movies.ui.tabs.currentTab.add(winDescripcion);
 				winDescripcion.open({animated: true});
@@ -78,6 +79,7 @@ CarteleraView.prototype.buildView = function () {
 			}	
 						
 			if (movies.osname=="iphone" || movies.osname == "ipad" ) {
+				movies.ui.tabs.currentTab.setWindow(winDescripcion);
 				movies.ui.tabs.currentTab.open(winDescripcion,{animated:true});
 			}				
 
@@ -85,9 +87,7 @@ CarteleraView.prototype.buildView = function () {
 	});	 // end listener
 
 	if (movies.osname!='android') {
-		refreshButton.addEventListener('click', function(e) {
-			self.tableView.data = null;
-			movies.ui.indicator.openIndicator();
+		refreshButton.addEventListener('click', function(e) {			
 			reload();
 		});	
 	}
@@ -100,8 +100,23 @@ CarteleraView.prototype.buildView = function () {
 
 // private
 
+var createTable = function() {
+	var table = Titanium.UI.createTableView();
+	if (movies.osname == 'android') {
+		table.backgroundColor = '#58595B';
+	}
+	else {
+		table.backgroundColor = '#ffffff';
+		table.borderColor = '#fff';
+		table.separatorColor = '#fff';		
+	}	
+	return table;
+}
+
 var reload = function() {
 	var movies = self._args.movies;	
+	movies.ui.indicator.openIndicator();
+	self.tableView.setData([]);
 	var Carteleras = self.pelicula.getCartelera({
 		host: movies.WSHOST, 
 		success: buildRows,
@@ -114,8 +129,6 @@ var onCreateCineMenu = function(e) {
 	var menu = e.menu;			
 	refreshCines = menu.add({title : 'Actualizar', tableView: self.tableView});
 	refreshCines.addEventListener('click', function(e) {
-		self.tableView.data = null;
-		movies.ui.indicator.openIndicator();
 		reload();
 	});
 			
@@ -210,8 +223,9 @@ function buildRows(mvs) {
 	
 	} // end for		
 
-	self.tableView.data = data;
+	self.tableView.setData(data);
 	movies.ui.indicator.closeIndicator();
+	Ti.API.log('buildrows' + Ti.Platform.availableMemory);    
 } // end function
 
 

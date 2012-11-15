@@ -1,23 +1,16 @@
+
 (function() {	
+
+	// cache de imagenes
+	var CachedImageView = require('lib/CachedImageView');
+	var civ = new CachedImageView('/images');
+
 	// -------
 	// ------- here, you should add all those graphic elements that will be use in the different views throughout the application
 	// -------
 
 	movies.ui = {};
 		
-	/**
-	 *  Activity indicator
-	 */
-	movies.ui.activityIndicator = Titanium.UI.createActivityIndicator({
-		bottom: 10, 
-		height: 50,
-		width: 'auto' 
-	    
-	});
-	
-	if (movies.osname == 'iphone') 
-		movies.ui.activityIndicator.style = Ti.UI.iPhone.ActivityIndicatorStyle.BIG; 	
-
 	/**
 	 * createRow: Create a table row
 	 */	
@@ -36,13 +29,15 @@
 			row.rightImage = 'images/right_arrow.png';		
 		
 		var photoScale = Titanium.UI.createImageView({ 
-			image: imagen,
+			image: 'images/default.png',
 			left: 0,
 			width: movies.ancho,
 			height: movies.ancho,
 			clickName:'photo'
 		});
 		
+		//civ.cache(imagen,photoScale);
+
 		var crop = Titanium.UI.createView({
 			top:0,
 			width: movies.ancho,

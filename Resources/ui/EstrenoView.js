@@ -85,8 +85,6 @@ EstrenoView.prototype.buildView = function () {
 
 	if (movies.osname!='android') {
 		refreshButton.addEventListener('click', function(e) {
-			self.tableView.data = null;
-			movies.ui.indicator.openIndicator();
 			reload();
 		});
 	}
@@ -100,6 +98,9 @@ EstrenoView.prototype.buildView = function () {
 
 var reload = function() {
 	var movies = self._args.movies;	
+	self.tableView.setData([]);
+	movies.ui.indicator.openIndicator();
+	
 	var estrenos = self.pelicula.getEstrenos({
 		host: movies.WSHOST, 
 		success: buildRows,
@@ -112,8 +113,6 @@ var onCreateCineMenu = function(e) {
 	var menu = e.menu;			
 	refreshCines = menu.add({title : 'Actualizar', tableView: self.tableView});
 	refreshCines.addEventListener('click', function(e) {
-		self.tableView.data = null;
-		movies.ui.indicator.openIndicator();
 		reload();
 	});
 			
@@ -207,7 +206,7 @@ function buildRows(mvs) {
 	
 	} // end for		
 
-	self.tableView.data = data;
+	self.tableView.setData(data);
 	movies.ui.indicator.closeIndicator();
 } // end function
 

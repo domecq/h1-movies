@@ -2,14 +2,26 @@
 // PeliculaDetailView class
 //
 
-function PeliculaDetailView(_args) {
+var tableView;
+var args;
+
+
+exports.build = function(_args) {
+
+	args = _args;
+
+	tableView = Titanium.UI.createTableView({
+		filterAttribute:'filter',
+		backgroundColor:'white',
+		separatorColor:'#fff',
+	});
+
 	//var win = Titanium.UI.currentWindow;
 	// creo la vista para el detalle
 	var titulo = _args.titulo,
 		movieId = _args.movieId,
 		movies = _args.movies,
 		tab = _args.movies.ui.tabs.currentTab;
-		
 	
 	
 	var Pelicula = require('model/Pelicula').Pelicula;
@@ -22,6 +34,7 @@ function PeliculaDetailView(_args) {
 	});
 	
 	var _win = _args.win;
+
 	
 
 	movies.ui.indicator.openIndicator();
@@ -74,7 +87,7 @@ function PeliculaDetailView(_args) {
 			row.backgroundSelectedColor = '#fff';
 			row.borderColor = '#fff';		
 			row.height = 30;
-			row.className = 'datarow';
+			row.className = 'dataText';
 			row.clickName = 'row';		
 			row.add(movieName);
 			data.push(row);	
@@ -92,7 +105,7 @@ function PeliculaDetailView(_args) {
 			row.backgroundSelectedColor = '#fff';
 			row.borderColor = '#fff';		
 			row.height = 310;
-			row.className = 'datarow';
+			row.className = 'photo';
 			row.clickName = 'row';		
 			row.add(photo);
 			data.push(row);	
@@ -132,7 +145,7 @@ function PeliculaDetailView(_args) {
 			row.backgroundSelectedColor = '#fff';
 			row.borderColor = '#fff';
 			row.height = altoDescripcion + 5;
-			row.className = 'datarow';
+			row.className = 'dataText';
 			row.clickName = 'row';		
 			row.add(description);
 			data.push(row);	
@@ -164,53 +177,63 @@ function PeliculaDetailView(_args) {
 			row.backgroundSelectedColor = '#fff';
 			row.borderColor = '#ccc';
 			row.height = 50;
-			row.className = 'datarow';
+			row.className = 'dataText';
 			row.clickName = 'row';		
 			row.add(horario);
 			//row.add(icono);
 			data.push(row);				
 				
 			tableView.data = data;
-			_win.add(tableView);				
-			// oculto el indicador de estado		
-			movies.ui.indicator.closeIndicator();
 
+			// oculto el indicador de estado		
+			movies.ui.indicator.closeIndicator();			
 				
 		}
 			
 	});
 	
-	tableView.addEventListener('click', function(e) {
- 		// 'cines/findwhere/:latitud/:longitud/:movie_id
-		if (e.rowData.movieId) {
+	//tableView.addEventListener('click', listenerClick);
+
 			
-			// Cine list view
-			var CineView = require('/ui/CineView');
-			var winDescripcion = Ti.UI.createWindow();
-			var listadoView = new CineView({titulo: 'Cines', win: winDescripcion, movies: movies});
-			winDescripcion.add(listadoView.buildView(e.rowData.movieId));
-		
-			if (movies.osname=="android" ) {
-				tab.add(winDescripcion);
-				winDescripcion.open({animated: true});
-				_args.win.addEventListener('android:back',function(e){
-					winDescripcion.close();
-					return false;
-				});					
-				
-			}	
-						
-			if (movies.osname=="iphone" || movies.osname == "ipad" ) {
-				tab.open(winDescripcion,{animated:true});
-			}				
-			
-			
-		}	
-		
-		
-	});
-			
-	return _win;
+	return tableView;
 }
 
-module.exports = PeliculaDetailView;
+
+exports.removeListener = function() {
+	tableView.removeEventListener('click', listenerClick);
+}
+
+var listenerClick = function(e) {
+		// 'cines/findwhere/:latitud/:longitud/:movie_id
+	var movies = args.movies;
+
+	if (e.rowData.movieId) {
+		
+		// Cine list view
+		var CineView = require('/ui/CineView');
+		var winDescripcion = Ti.UI.createWindow();
+		var listadoView = new CineView({titulo: 'Cines', win: winDescripcion, movies: movies});
+		winDescripcion.add(listadoView.buildView(e.rowData.movieId));
+	
+		if (movies.osname=="android" ) {
+			tab.add(winDescripcion);
+			winDescripcion.open({animated: true});
+			args.win.addEventListener('android:back',function(e){
+				winDescripcion.close();
+				return false;
+			});					
+			
+		}	
+					
+		if (movies.osname=="iphone" || movies.osname == "ipad" ) {
+			tab.open(winDescripcion,{animated:true});
+		}				
+		
+		
+	}	
+	
+	
+}
+
+//module.exports = build;
+//module.exports = listenerClick;
