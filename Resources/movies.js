@@ -1,6 +1,3 @@
-// global (ESTO NO SE HACE!!! pero bueh una solita)
-Ti.App.llUpdated = false;
-
 // creo el objeto movies (la aplicacion en si)
 var movies = {
 	android: {
@@ -8,11 +5,14 @@ var movies = {
 	},
     ui: {},
     __isLargeScreen: undefined,
-    __isAndroid: undefined,
-    navGroup: undefined
+    __isAndroid: undefined
 };
 
+
+
 (function() {
+
+	var memoryCleaner = require('lib/MemoryCleaner');
 	
 	// propiedades 
 	movies.osname = Titanium.Platform.osname;
@@ -44,7 +44,8 @@ var movies = {
 		}
 		return movies.__isAndroid;
 	};
-	
+
+	movies.memoryCleaner = new memoryCleaner();
 	
 })();
 
