@@ -10,8 +10,10 @@ function EstrenoView(_args) {
 
 	// model pelicula
 	var Pelicula = require('model/Pelicula').Pelicula;	
-	// instance
 	self.pelicula = new Pelicula();
+	// detail view
+	self.winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
+	self.peliculaDetailView = require('/ui/PeliculaDetailView');	
 
 }	
 
@@ -60,11 +62,19 @@ EstrenoView.prototype.buildView = function () {
 	// listener
 	self.tableView.addEventListener('click', function(e) {
 		if (e.rowData.movieId) {
+			Ti.API.log('Memoria disponible ' + Ti.Platform.availableMemory);    
+
+			// destruyo la ventana previa
+			self.winDescripcion.close();
+			self.winDescripcion = null;
+			self.winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
+
 			// creo la ventana
-			var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.rowData.titulo})
+			var winDescripcion = self.winDescripcion;
+			winDescripcion.title = e.rowData.titulo;
+
 			// Pelicula view
-			var PeliculaDetailView = require('/ui/PeliculaDetailView');
-			winDescripcion = new PeliculaDetailView({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies}); 
+			winDescripcion.add(self.peliculaDetailView.build({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies}));
 
 			if (movies.osname=="android" ) {
 				movies.ui.tabs.currentTab.add(winDescripcion);
@@ -77,6 +87,7 @@ EstrenoView.prototype.buildView = function () {
 			}	
 						
 			if (movies.osname=="iphone" || movies.osname == "ipad" ) {
+				movies.ui.tabs.currentTab.setWindow(winDescripcion);
 				movies.ui.tabs.currentTab.open(winDescripcion,{animated:true});
 			}				
 
@@ -100,7 +111,7 @@ var reload = function() {
 	var movies = self._args.movies;	
 	self.tableView.setData([]);
 	movies.ui.indicator.openIndicator();
-	
+
 	var estrenos = self.pelicula.getEstrenos({
 		host: movies.WSHOST, 
 		success: buildRows,
