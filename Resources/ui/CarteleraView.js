@@ -8,7 +8,7 @@ function CarteleraView(_args) {
 	// get the _args		
 	self._args = _args;
 
-ç	// model pelicula
+	// model pelicula
 	var Pelicula = require('model/Pelicula').Pelicula;	
 	self.pelicula = new Pelicula();
 	// detail view
@@ -68,6 +68,7 @@ CarteleraView.prototype.buildView = function () {
 			// Pelicula view
 			winDescripcion.add(self.peliculaDetailView.build({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies}));
 			
+
 			if (movies.osname=="android" ) {
 				movies.ui.tabs.currentTab.add(winDescripcion);
 				winDescripcion.open({animated: true});
