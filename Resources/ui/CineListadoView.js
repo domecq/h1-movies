@@ -7,6 +7,10 @@ var self = this;
 function CineListadoView(_args) {
 	// get the _args		
 	self._args = _args;
+	// detail view
+	self.winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
+	self.cineDetailView = require('/ui/cineDetailView');	
+
 }	
 
 
@@ -53,12 +57,19 @@ CineListadoView.prototype.buildView = function () {
 	self.tableView.addEventListener('click', function(e) {
 		if (e.rowData.movieId) {
 			
+			Ti.API.log('Memoria disponible ' + Ti.Platform.availableMemory);    
+
+			// destruyo la ventana previa
+			self.winDescripcion.close();
+			self.winDescripcion = null;
+			self.winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
+
 			// creo la windows de la descripcion	
-			var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.rowData.titulo})
+			var winDescripcion = self.winDescripcion;
+			winDescripcion.title = e.rowData.titulo;
 						
 			// Pelicula view
-			var CineDetailView = require('/ui/CineDetailView');
-			winDescripcion = new CineDetailView({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies});
+			winDescripcion.add(self.cineDetailView.build({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies}));
 
 			if (movies.osname=="android" ) {
 				movies.ui.tabs.currentTab.add(winDescripcion);
@@ -71,6 +82,7 @@ CineListadoView.prototype.buildView = function () {
 			}	
 						
 			if (movies.osname=="iphone" || movies.osname == "ipad" ) {
+				movies.ui.tabs.currentTab.setWindow(winDescripcion);
 				movies.ui.tabs.currentTab.open(winDescripcion,{animated:true});
 			}				
 

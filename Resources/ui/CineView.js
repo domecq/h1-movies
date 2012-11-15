@@ -15,8 +15,10 @@ function CineView(_args) {
 	// Cine model			
 	var Cine = require('model/Cine').Cine;	
 	self.cine = new Cine();
+	// detail view
+	self.winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
+	self.cineDetailView = require('/ui/cineDetailView');	
 
-	Ti.API.log('here');
 }	
 
 
@@ -164,11 +166,19 @@ var clickAnnotation = function(e) {
 	if (!e) return;
 	if (e.annotation && (e.clicksource === 'title' || e.clicksource == 'rightButton' || e.clicksource == 'subtitle') ) {
 		
+		Ti.API.log('Memoria disponible ' + Ti.Platform.availableMemory);    
+
+		// destruyo la ventana previa
+		self.winDescripcion.close();
+		self.winDescripcion = null;
+		self.winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
+
 		// creo la windows de la descripcion	
-		var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.title})
+		var winDescripcion = self.winDescripcion;
+		winDescripcion.title = e.title;
+
 		// Pelicula view
-		var CineDetailView = require('/ui/CineDetailView');
-		winDescripcion = new CineDetailView({titulo: e.annotation.title, movieId: e.annotation.cineId, win: winDescripcion, movies: movies});
+		winDescripcion.add(self.cineDetailView.build({titulo: e.annotation.title, movieId: e.annotation.cineId, win: winDescripcion, movies: movies}));
 
 		if (movies.osname=="android" ) {
 			movies.ui.tabs.currentTab.add(winDescripcion);
@@ -181,6 +191,7 @@ var clickAnnotation = function(e) {
 		}	
 					
 		if (movies.osname=="iphone" || movies.osname == "ipad" ) {
+			movies.ui.tabs.currentTab.setWindow(winDescripcion);
 			movies.ui.tabs.currentTab.open(winDescripcion,{animated:true});
 		}				
 					

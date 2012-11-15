@@ -2,9 +2,13 @@
 // CineDetailView class
 //
 
-function CineDetailView(_args) {
+var tableView;
+var args;
+
+exports.build = function(_args) {
 	//var win = Titanium.UI.currentWindow;
 	// creo la vista para el detalle
+	args = _args;
 	var titulo = _args.titulo,
 		movieId = _args.movieId,
 		movies = _args.movies;
@@ -13,14 +17,11 @@ function CineDetailView(_args) {
 	var Cine = require('model/Cine').Cine;
 	var peli = new Cine();
 	
-	var tableView = Titanium.UI.createTableView({
+	tableView = Titanium.UI.createTableView({
 		filterAttribute:'filter',
 		backgroundColor:'white',
 		separatorColor:'#fff',
-	});
-	
-	var _win = _args.win;
-	
+	});		
 
 	movies.ui.indicator.openIndicator();
 	
@@ -162,7 +163,6 @@ function CineDetailView(_args) {
 			}
 				
 			tableView.data = data;
-			_win.add(tableView);
 			// oculto el indicador de estado
 			movies.ui.indicator.closeIndicator();
 				
@@ -184,7 +184,7 @@ function CineDetailView(_args) {
 			if (movies.osname=="android" ) {
 				movies.ui.tabs.currentTab.add(winDescripcion);
 				winDescripcion.open({animated: true});
-				self._args.win.addEventListener('android:back',function(e){
+				args.win.addEventListener('android:back',function(e){
 					winDescripcion.close();
 					return false;
 				});					
@@ -198,7 +198,5 @@ function CineDetailView(_args) {
 		}	
 	});
 			
-	return _win;
+	return tableView;
 }
-
-module.exports = CineDetailView;
