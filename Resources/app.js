@@ -7,8 +7,9 @@
  */
 
 
-// main logic, main properties
+// main properties
 Ti.include('movies.js');
-
+// user interface
+Ti.include('ui/ui.js');
 // create the main application window
 movies.ui.createApplicationWindow();
