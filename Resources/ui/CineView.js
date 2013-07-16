@@ -201,10 +201,9 @@ exports.init = function (_args) {
 		var createCineListadoUI = function () {
 			var movies = _args.movies;
 			// Cine list view
-			var CineListadoView = require('/ui/CineListadoView');
+			var cineListadoView = require('/ui/CineListadoView');
 			var winDescripcion = Ti.UI.createWindow();
-			var listadoView = new CineListadoView({titulo: 'Cines', win: winDescripcion, movies: movies});
-			winDescripcion.add(listadoView.buildView());
+			winDescripcion.add(cineListadoView.buildView({titulo: 'Cines', win: winDescripcion, movies: movies, latitude: latitude, longitude: longitude}));
 
 			if (movies.osname=="android" ) {
 				tab.add(winDescripcion);
