@@ -9,6 +9,7 @@ exports.buildView = function (_args) {
 	var movies = _args.movies;
 	var latitude = _args.latitude;
 	var longitude = _args.longitude;
+	var pelicula_id = _args.pelicula_id;
 	// create a var to track the active row
 	var currentRow = null;
 	var currentRowIndex = null;
@@ -33,13 +34,23 @@ exports.buildView = function (_args) {
 	// get cines		
 	var row = null;		
 
-	var cines = cine.getCines({
-		host: movies.WSHOST, 
-		success: buildRows,
-		latitude: latitude,
-		longitude: longitude,
-		movies: movies 	
-	});	
+
+	if (!pelicula_id)
+		var cines = cine.getCines({
+			host: movies.WSHOST, 
+			success: buildRows,
+			latitude: latitude,
+			longitude: longitude,
+			movies: movies 	
+		});	
+	else
+		var cines = cine.getCines({
+			host: movies.WSHOST, 
+			success: buildRows,
+			pelicula_id: pelicula_id,
+			movies: movies 	
+		});	
+
 	
 
 	// listener

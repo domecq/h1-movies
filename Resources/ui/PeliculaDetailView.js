@@ -32,7 +32,8 @@ exports.build = function(_args) {
 		backgroundColor:'white',
 		separatorColor:'#fff',
 	});
-	
+
+
 	var _win = _args.win;
 
 	
@@ -178,12 +179,39 @@ exports.build = function(_args) {
 			row.borderColor = '#ccc';
 			row.height = 50;
 			row.className = 'dataText';
-			row.clickName = 'row';		
+			row.clickName = 'horario';		
 			row.add(horario);
 			//row.add(icono);
 			data.push(row);				
 				
 			tableView.data = data;
+
+
+			tableView.addEventListener('click', function(e) {
+				// ir a donde corresponda
+
+				if (e.rowData.clickName=='horario') {
+					var movies = _args.movies;
+					// Cine list view
+					var cineListadoView = require('/ui/CineListadoView');
+					var winDescripcion = Ti.UI.createWindow();
+					winDescripcion.add(cineListadoView.buildView({titulo: 'Cines', win: winDescripcion, movies: movies, pelicula_id: pelicula_id}));
+
+					if (movies.osname=="android" ) {
+						tab.add(winDescripcion);
+						winDescripcion.open({animated: true});
+						_args.win.addEventListener('android:back',function(e){
+							winDescripcion.close();
+							return false;
+						});					
+						
+					}	
+								
+					if (movies.osname=="iphone" || movies.osname == "ipad" ) {
+						tab.open(winDescripcion,{animated:true});
+					}				
+				}
+			});
 
 			// oculto el indicador de estado		
 			movies.ui.indicator.closeIndicator();			
@@ -192,48 +220,37 @@ exports.build = function(_args) {
 			
 	});
 	
-	//tableView.addEventListener('click', listenerClick);
+	var listenerClick = function(e) {
+			// 'cines/findwhere/:latitud/:longitud/:movie_id
+		var movies = args.movies;
 
+		if (e.rowData.movieId) {
+			
+			// Cine list view
+			var CineView = require('/ui/CineView');
+			var winDescripcion = Ti.UI.createWindow();
+			var listadoView = new CineView({titulo: 'Cines', win: winDescripcion, movies: movies});
+			winDescripcion.add(listadoView.buildView(e.rowData.movieId));
+		
+			if (movies.osname=="android" ) {
+				tab.add(winDescripcion);
+				winDescripcion.open({animated: true});
+				args.win.addEventListener('android:back',function(e){
+					winDescripcion.close();
+					return false;
+				});					
+				
+			}	
+						
+			if (movies.osname=="iphone" || movies.osname == "ipad" ) {
+				tab.open(winDescripcion,{animated:true});
+			}				
+			
+			
+		}	
+		
+		
+	}
 			
 	return tableView;
 }
-
-
-exports.removeListener = function() {
-	tableView.removeEventListener('click', listenerClick);
-}
-
-var listenerClick = function(e) {
-		// 'cines/findwhere/:latitud/:longitud/:movie_id
-	var movies = args.movies;
-
-	if (e.rowData.movieId) {
-		
-		// Cine list view
-		var CineView = require('/ui/CineView');
-		var winDescripcion = Ti.UI.createWindow();
-		var listadoView = new CineView({titulo: 'Cines', win: winDescripcion, movies: movies});
-		winDescripcion.add(listadoView.buildView(e.rowData.movieId));
-	
-		if (movies.osname=="android" ) {
-			tab.add(winDescripcion);
-			winDescripcion.open({animated: true});
-			args.win.addEventListener('android:back',function(e){
-				winDescripcion.close();
-				return false;
-			});					
-			
-		}	
-					
-		if (movies.osname=="iphone" || movies.osname == "ipad" ) {
-			tab.open(winDescripcion,{animated:true});
-		}				
-		
-		
-	}	
-	
-	
-}
-
-//module.exports = build;
-//module.exports = listenerClick;

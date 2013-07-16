@@ -66,8 +66,10 @@ var findNear = function(args) {
 	var url;
 	if (typeof args.pelicula_id == 'undefined') 
 		url = args.host + '/cines/findnear/' + args.latitude + '/' + args.longitude;
-	else
+	else if (typeof args.latitude != 'undefined') 
 		url = args.host + '/cines/findwhere/' + args.latitude + '/' + args.longitude  + '/' + args.pelicula_id;			
+	else 
+		url = args.host + '/cines/wheretowatch/' +args.pelicula_id;					
 
 	Ti.API.log(url);
 	client.open('GET', url);		
