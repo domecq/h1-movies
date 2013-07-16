@@ -71,10 +71,10 @@ exports.init = function (_args) {
 			latitude = geo.getLatitude();
 			longitude = geo.getLongitude();
 			Ti.API.info('location ' + latitude + ' ' + longitude );
-			// if (latitude == null || longitude == null ) {
+			if (latitude == null || longitude == null ) {
 				latitude = -34.569281;
 				longitude = -58.468939;
-			// }	
+			}	
 			mapview.region = {latitude: latitude, longitude: longitude, latitudeDelta:0.04, longitudeDelta:0.04};	
 			
 			// creo el menú para android y el tab nav para ios	
