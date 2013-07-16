@@ -29,14 +29,14 @@
 			row.rightImage = 'images/right_arrow.png';		
 		
 		var photoScale = Titanium.UI.createImageView({ 
-			image: 'images/default.png',
+			image: imagen,/*'images/default.png',*/
 			left: 0,
 			width: movies.ancho,
 			height: movies.ancho,
 			clickName:'photo'
 		});
 		
-		//civ.cache(imagen,photoScale);
+		// civ.cache(imagen,photoScale);
 
 		var crop = Titanium.UI.createView({
 			top:0,

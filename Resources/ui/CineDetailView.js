@@ -2,13 +2,11 @@
 // CineDetailView class
 //
 
-var tableView;
-var args;
 
 exports.build = function(_args) {
 	//var win = Titanium.UI.currentWindow;
 	// creo la vista para el detalle
-	args = _args;
+	var args = _args;
 	var titulo = _args.titulo,
 		movieId = _args.movieId,
 		movies = _args.movies;
@@ -178,8 +176,8 @@ exports.build = function(_args) {
 			// creo la ventana
 			var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff', title:e.rowData.titulo})
 			// Pelicula view
-			var PeliculaDetailView = require('/ui/PeliculaDetailView');
-			winDescripcion = new PeliculaDetailView({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies}); 
+			var peliculaDetailView = require('/ui/PeliculaDetailView');
+			winDescripcion.add(peliculaDetailView.build({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies})); 
 
 			if (movies.osname=="android" ) {
 				movies.ui.tabs.currentTab.add(winDescripcion);

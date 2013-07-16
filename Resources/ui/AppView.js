@@ -3,16 +3,16 @@ exports.AppView = function(args) {
 	// the generic controls for all the instances should be place here
 	switch(args.kind) {
 		case 'estrenos':
-			EstrenoView = require('/ui/EstrenoView'); 
-			instance = new EstrenoView({win_params: args.win, movies: args.movies, win: args.win }); 			
+			instance = require('/ui/EstrenoView'); 
+			instance.init({win_params: args.win, movies: args.movies, win: args.win }); 			
 		break;
 		case 'cartelera':
-			CarteleraView = require('/ui/CarteleraView'); 
-			instance = new CarteleraView({win_params: args.win, movies: args.movies, win: args.win }); 			
+			instance = require('/ui/CarteleraView'); 
+			instance.init({win_params: args.win, movies: args.movies, win: args.win }); 			
 		break;
 		case 'cines':
-			CineView = require('/ui/CineView'); 
-			instance = new CineView({win_params: args.win, movies: args.movies, win: args.win }); 			
+			instance = require('/ui/CineView'); 
+			instance.init({win_params: args.win, movies: args.movies, win: args.win }); 			
 		break;		
 		
 	}
