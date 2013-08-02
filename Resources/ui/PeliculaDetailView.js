@@ -2,15 +2,13 @@
 // PeliculaDetailView class
 //
 
-var tableView;
-var args;
 
 
 exports.build = function(_args) {
 
-	args = _args;
+	var args = _args;
 
-	tableView = Titanium.UI.createTableView({
+	var tableView = Titanium.UI.createTableView({
 		filterAttribute:'filter',
 		backgroundColor:'white',
 		separatorColor:'#fff',
@@ -27,11 +25,6 @@ exports.build = function(_args) {
 	var Pelicula = require('model/Pelicula').Pelicula;
 	var peli = new Pelicula();
 	
-	var tableView = Titanium.UI.createTableView({
-		filterAttribute:'filter',
-		backgroundColor:'white',
-		separatorColor:'#fff',
-	});
 
 
 	var _win = _args.win;

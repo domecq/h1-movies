@@ -44,15 +44,9 @@ exports.init = function (_args) {
 
 		// listener
 		tableView.addEventListener('click', function(e) {
-			// detail view
-			var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
-
-			if (e.rowData.movieId) {
-				
-				Ti.API.log('Memoria disponible ' + Ti.Platform.availableMemory);    
-				winDescripcion.close();
-				winDescripcion = null;
-				winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
+			// alert(e.rowData.movieId);
+			if (e.rowData.movieId) {				
+				var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
 
 				// creo la windows de la descripcion
 				var winDescripcion = winDescripcion;
@@ -140,18 +134,8 @@ exports.init = function (_args) {
 				var brief = movie.descripcion;
 				var imagen = movie.imagen;
 				var titulo = movie.titulo;
-					// create row				
-				row = movies.ui.createRow(imagen, pelicula_id, titulo);
-			
-				var viewText = Titanium.UI.createView({
-					top:75,
-					width: movies.ancho,
-					height: 65,
-					backgroundColor: '#ffffff'			
-				});
-				
-				row.add(viewText);
-			
+
+				// cuentas para calcular el tamaño de las letras (DEPRECATED)
 				var fs = 14;
 				var fsw = 7.5;
 				
@@ -176,19 +160,10 @@ exports.init = function (_args) {
 					if (titulo.length>=max)
 						titulo = titulo.substring(0,max) + '...';
 				}			
-				var movieName = Ti.UI.createLabel({
-					color:'white',
-					font:{fontSize:fsName,fontWeight:'bold', fontFamily:'Arial'},
-					left:5,
-					top: 25,
-					height:30,
-					width: w,
-					clickName:'movieName',
-					text: titulo
-				});
-			
-				row.filter = movieName.text;
-				row.add(movieName);
+
+				// create row				
+				row = movies.ui.createRow(imagen, pelicula_id, titulo, fsName, w);
+						
 				
 				// creo la descripcion
 				var max = Math.floor((60/(fs-3))*(w/(fs-3)));

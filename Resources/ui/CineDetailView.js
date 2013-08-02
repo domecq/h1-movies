@@ -9,7 +9,8 @@ exports.build = function(_args) {
 	var args = _args;
 	var titulo = _args.titulo,
 		movieId = _args.movieId,
-		movies = _args.movies;
+		movies = _args.movies,
+		peliculaId = _args.pelicula_id;
 	
 	
 	var Cine = require('model/Cine').Cine;
@@ -118,46 +119,49 @@ exports.build = function(_args) {
 	
 			for (var i=0;i<peliculas.length;i++ ) {	
 				
-				var titulo = peliculas[i].titulo;
-				var horarios = peliculas[i].horas;
-				var pelicula_id = peliculas[i].pelicula_id;
-				var ancho = movies.ancho - 35;
-			 	var alto  = Math.floor(horarios.length  / (movies.ancho - 30)) ;		
-				
-				// titulo
-				var movieTitulo = Ti.UI.createLabel({
-					color:'#576996',
-					font:{fontSize: fs,fontWeight:'bold', fontFamily:'Arial'},
-					left:20,
-					height: 20,
-					width: ancho,
-					text: titulo,
-					top: 0
-				});
-				
-				// creo los horarios
-				var movieHorarios = Ti.UI.createLabel({
-					color:'#222',
-					font:{fontSize:fs,fontWeight:'normal', fontFamily:'Arial'},
-					left:20,
-					width: ancho,
-					height: 40,					
-					text: horarios,
-					top: 22
-				});
-				
-				var row = Ti.UI.createTableViewRow({hasChild:true, movieId: pelicula_id, titulo: titulo});
-				row.backgroundSelectedColor = '#fff';
-				row.borderColor = '#ccc';
-				row.height = 70;
-				row.add(movieTitulo);
-				row.add(movieHorarios);
-				if (movies.osname == 'android')
-					row.rightImage = '../images/right_arrow_black.png';
-				else 
-					row.rightImage = 'images/right_arrow_black.png';
+			 	if (!peliculaId ||  peliculas[i].pelicula_id == peliculaId) {
+					var titulo = peliculas[i].titulo;
+					var horarios = peliculas[i].horas;
+					var pelicula_id = peliculas[i].pelicula_id;
+					var ancho = movies.ancho - 35;
+				 	var alto  = Math.floor(horarios.length  / (movies.ancho - 30)) ;		
 
-				data.push(row);				
+					
+					// titulo
+					var movieTitulo = Ti.UI.createLabel({
+						color:'#576996',
+						font:{fontSize: fs,fontWeight:'bold', fontFamily:'Arial'},
+						left:20,
+						height: 20,
+						width: ancho,
+						text: titulo,
+						top: 0
+					});
+					
+					// creo los horarios
+					var movieHorarios = Ti.UI.createLabel({
+						color:'#222',
+						font:{fontSize:fs,fontWeight:'normal', fontFamily:'Arial'},
+						left:20,
+						width: ancho,
+						height: 40,					
+						text: horarios,
+						top: 22
+					});
+					
+					var row = Ti.UI.createTableViewRow({hasChild:true, movieId: pelicula_id, titulo: titulo});
+					row.backgroundSelectedColor = '#fff';
+					row.borderColor = '#ccc';
+					row.height = 70;
+					row.add(movieTitulo);
+					row.add(movieHorarios);
+					if (movies.osname == 'android')
+						row.rightImage = '../images/right_arrow_black.png';
+					else 
+						row.rightImage = 'images/right_arrow_black.png';
+
+					data.push(row);				
+				}
 			}
 				
 			tableView.data = data;

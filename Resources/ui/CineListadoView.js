@@ -4,7 +4,7 @@
 exports.buildView = function (_args) {
 	// detail view
 	var winDescripcion = Titanium.UI.createWindow({ backgroundColor:'#fff'});
-	var cineDetailView = require('/ui/cineDetailView');	
+	var cineDetailView = require('/ui/CineDetailView');	
 
 	var movies = _args.movies;
 	var latitude = _args.latitude;
@@ -63,7 +63,7 @@ exports.buildView = function (_args) {
 			winDescripcion.title = e.rowData.titulo;
 						
 			// Pelicula view
-			winDescripcion.add(cineDetailView.build({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies}));
+			winDescripcion.add(cineDetailView.build({titulo: e.rowData.titulo, movieId: e.rowData.movieId, win: winDescripcion, movies: movies, pelicula_id: pelicula_id}));
 
 			if (movies.osname=="android" ) {
 				movies.ui.tabs.currentTab.add(winDescripcion);

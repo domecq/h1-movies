@@ -13,7 +13,7 @@ exports.init = function (_args) {
 	var Cine = require('model/Cine').Cine;	
 	var cine = new Cine();
 	// detail view
-	var cineDetailView = require('/ui/cineDetailView');	
+	var cineDetailView = require('/ui/CineDetailView');	
 	var latitude = null;
 	var longitude = null;
 
@@ -22,7 +22,7 @@ exports.init = function (_args) {
 	
 	// public methods
 		
-	var buildView = function (pelicula_id) { 
+	function buildView(pelicula_id) { 
 
 		var movies = _args.movies;
 		pelicula_id = (typeof pelicula_id!=='undefined') ? pelicula_id : null;
