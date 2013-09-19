@@ -1,4 +1,4 @@
 h1-movies
 =========
 
-Movie showtimes with geolocalization
+Movie showtimes with geolocation
